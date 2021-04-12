@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>ced91cf3-2148-43eb-b586-a86185d3f88d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>PSOAlgorithm.py</StartupFile>
+    <StartupFile>Main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,7 +24,10 @@
     <Compile Include="PSOAlgorithm.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TestFun.py">
+    <Compile Include="Main.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TestFunctions.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
