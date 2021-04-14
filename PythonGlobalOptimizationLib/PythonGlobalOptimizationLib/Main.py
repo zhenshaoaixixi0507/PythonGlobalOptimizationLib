@@ -13,6 +13,6 @@ numofswarms=200
 initialgusssize=1000
 maximumiteration=5000
 PSO=PSOOptimization(lowerbound,upperbound,tolerance,numofswarms,initialgusssize,maximumiteration,test)
-PSO.optimize()
+optimizedparameters=PSO.optimize()
 
 
