@@ -103,8 +103,10 @@ class ChaoticPSOOptimization:
    oldglobalerror=minerror
    C10 = 0.37
    C20 = 0.73
+   C30=0.12
    for i in range(self._maximumiteration):
-       tempweight = inertiaweightmin + (inertiaweightmax-inertiaweightmin) / self._maximumiteration* i
+       tempweight = (inertiaweightmin + (inertiaweightmax-inertiaweightmin) / self._maximumiteration* i)*C30
+       C30=4*C30*(1-C30)
        for j in range(self._numofswarms):
             C10 = 4 * C10 * (1 - C10)
             C20 = 4 * C20 * (1 - C20)
