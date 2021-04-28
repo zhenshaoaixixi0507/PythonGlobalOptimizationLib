@@ -4,7 +4,7 @@ from typing import Callable
 
 RealFunc = Callable[[float], float]  # type alias for a real -> real function
 
-def ConstrainX(x,lowerbound, upperbound):
+def ConstrainX(x:[float],lowerbound:[float], upperbound:[float])-> [float]:
     result=[0]*len(lowerbound)
     for i in range(len(x)):
         result[i]=x[i]
@@ -13,7 +13,7 @@ def ConstrainX(x,lowerbound, upperbound):
         if x[i]>upperbound[i]:
             result[i]=upperbound[i]
     return result
-def ConstrainV(tempV,Vmax):
+def ConstrainV(tempV:[float],Vmax:[float])->[float]:
     result=[0]*len(tempV)
     for i in range(len(tempV)):
         result[i]=tempV[i]
@@ -22,14 +22,14 @@ def ConstrainV(tempV,Vmax):
         if tempV[i]>Vmax:
             result[i]=Vmax
     return result
-def GenerateR(seed,length):
+def GenerateR(seed:int,length:int):
      random.seed(seed)
      result=[0]*length
      for i in range(len(result)):
          result[i]=random.random()
      return result
 
-def swaplocalbest(function,oldx, newx):
+def swaplocalbest(function:RealFunc,oldx:[float], newx:[float])->[float]:
      result=[0]*len(oldx)
      olderror=function(oldx)
      newerror=function(newx)
@@ -40,22 +40,22 @@ def swaplocalbest(function,oldx, newx):
          for i in range(len(oldx)):
              result[i]=oldx[i]
      return result
-def ArrayMinus(x,y):
+def ArrayMinus(x:[float],y:[float])->[float]:
      result=[0]*len(x)
      for i in range(len(x)):
          result[i]=x[i]-y[i]
      return result
-def ArrayPlus(x,y):
+def ArrayPlus(x:[float],y:[float])->[float]:
      result=[0]*len(x)
      for i in range(len(x)):
          result[i]=x[i]+y[i]
      return result
-def ArrayMultiplyConstant(x,c):
+def ArrayMultiplyConstant(x:[float],c:float)->[float]:
      result=[0]*len(x)
      for i in range(len(x)):
          result[i]=x[i]*c
      return result
-def ArrayMultiplyArray(x,y):
+def ArrayMultiplyArray(x:[float],y:[float])->[float]:
      result=[0]*len(x)
      for i in range(len(x)):
          result[i]=x[i]*y[i]
