@@ -22,10 +22,13 @@ def ConstrainV(tempV:[float],Vmax:[float])->[float]:
         if tempV[i]>Vmax:
             result[i]=Vmax
     return result
-def GenerateR(seed:int,length:int):
-    random.seed(seed)
-    result=[random.random() for i in range(len(result))]
-    return result
+def GenerateR(u0:float,y0:float,length:int)->(float,float,[float]):
+    result=[0]*length
+    for i in range(length):
+       y0 = math.cos(2 * math.pi * u0) + y0 * math.exp(-3)
+       u0 = (u0 + 400 + 12 * y0) % 1.0
+       result[i] = min(max(u0, 0), 1)
+    return (u0,y0,result)
 
 def swaplocalbest(function:RealFunc,oldx:[float], newx:[float])->[float]:
      result=[0]*len(oldx)
@@ -67,14 +70,16 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:[float],upperbound:[float],
    temp=[0]*len(lowerbound)
    tempV=[0]*len(lowerbound)
    globalbest=[0]*len(lowerbound)
-   C10=0.21
-   C20=0.63
+   u0=1.0
+   y0=1.0
    for i in range(initialgusssize):
      for j in range(len(lowerbound)):
-        C10 = 4 * C10 * (1 - C10)
-        C20 = 4 * C20 * (1 - C20)
-        temp[j]=(upperbound[j] - lowerbound[j]) * C10 + lowerbound[j]
-        tempV[j] = 2 * Vmax * C20 - Vmax
+        y0 = math.cos(2 * math.pi * u0) + y0 * math.exp(-3)
+        u0 = (u0 + 400 + 12 * y0) % 1.0
+        temp[j]=(upperbound[j] - lowerbound[j]) * min(max(u0, 0), 1) + lowerbound[j]
+        y0 = math.cos(2 * math.pi * u0) + y0 * math.exp(-3)
+        u0 = (u0 + 400 + 12 * y0) % 1.0
+        tempV[j] = 2 * Vmax * min(max(u0, 0), 1) - Vmax
      localswarm[i]=temp.copy()
      localbest[i]=temp.copy()
      Velocity[i]=tempV.copy()
@@ -86,21 +91,20 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:[float],upperbound:[float],
              minerror=error
              globalbest=temp
    oldglobalerror=minerror
-   C10 = 0.37
-   C20 = 0.73
-   C30=0.12
+   u0 = 1.00
+   y0 = 1.00
    for i in range(maximumiteration):
-       tempweight = (inertiaweightmin + (inertiaweightmax-inertiaweightmin) / maximumiteration* i)*C30
-       C30=4*C30*(1-C30)
+       tempweight = (inertiaweightmin + (inertiaweightmax-inertiaweightmin) / maximumiteration* i)
        for j in range(numofswarms):
-            C10 = 4 * C10 * (1 - C10)
-            C20 = 4 * C20 * (1 - C20)
+           
             tempx = localswarm[j].copy()
             tempV = Velocity[j].copy()
             templocalbest = localbest[j].copy()
             item1 = ArrayMultiplyConstant(tempV, tempweight)
-            item2 = ArrayMultiplyConstant(ArrayMinus(templocalbest, tempx),C10*c1)
-            item3 = ArrayMultiplyConstant(ArrayMinus(globalbest, tempx), C20 * c2)
+            (u0,y0,R1)=GenerateR(u0,y0,len(lowerbound))
+            (u0,y0,R2)=GenerateR(u0,y0,len(lowerbound))
+            item2 = ArrayMultiplyArray(ArrayMinus(templocalbest, tempx),ArrayMultiplyConstant(R1,c1))
+            item3 = ArrayMultiplyArray(ArrayMinus(globalbest, tempx), ArrayMultiplyConstant(R2,c2))
             item1 = ArrayPlus(item1, item2)
             item1 = ArrayPlus(item1, item3)
             newV =ArrayMultiplyConstant(item1, 1);
