@@ -1,5 +1,5 @@
-from ChaoticPSOAlgorithm import ChaoticPSOOptimization
-from TestFunctions import TestFunctions
+import ChaoticPSOAlgorithm as PSO
+import TestFunctions as TF
 #import yfinance as yf
 #import matplotlib.pyplot as plt
 #import seaborn
@@ -12,7 +12,7 @@ from TestFunctions import TestFunctions
 ## get historical market data
 #hist = msft.history(period="5d")
 #hist['Close'].plot(figsize=(16, 9))
-test=TestFunctions()
+
 numofpara=20
 lowerbound=[0]*numofpara
 upperbound=[0]*numofpara
@@ -23,7 +23,6 @@ tolerance=0.000001
 numofswarms=100
 initialgusssize=1000
 maximumiteration=5000
-ChaoticPSO=ChaoticPSOOptimization(lowerbound,upperbound,tolerance,numofswarms,initialgusssize,maximumiteration,test)
-optimizedparameters=ChaoticPSO.optimize()
+optimizedparameters=PSO.chaoticPSOOptimize(TF.function1,lowerbound,upperbound,maximumiteration,initialgusssize,numofswarms,tolerance)
 
 

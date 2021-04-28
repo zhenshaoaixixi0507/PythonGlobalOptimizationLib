@@ -1,6 +1,5 @@
 import math
-class TestFunctions:
- def function1(self,parameters):
+def function1(parameters):
   sum=0.0
   for i in range(len(parameters)):
     sum=sum+parameters[i]*parameters[i]
