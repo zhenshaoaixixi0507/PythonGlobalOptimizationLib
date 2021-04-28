@@ -23,43 +23,31 @@ def ConstrainV(tempV:[float],Vmax:[float])->[float]:
             result[i]=Vmax
     return result
 def GenerateR(seed:int,length:int):
-     random.seed(seed)
-     result=[0]*length
-     for i in range(len(result)):
-         result[i]=random.random()
-     return result
+    random.seed(seed)
+    result=[random.random() for i in range(len(result))]
+    return result
 
 def swaplocalbest(function:RealFunc,oldx:[float], newx:[float])->[float]:
      result=[0]*len(oldx)
      olderror=function(oldx)
      newerror=function(newx)
      if newerror<olderror:
-         for i in range(len(newx)):
-             result[i]=newx[i]
+         result=newx.copy()
      if newerror>=olderror:
-         for i in range(len(oldx)):
-             result[i]=oldx[i]
+         result=oldx.copy()
      return result
 def ArrayMinus(x:[float],y:[float])->[float]:
-     result=[0]*len(x)
-     for i in range(len(x)):
-         result[i]=x[i]-y[i]
+     result=[x[i]-y[i] for i in range(len(x))]
      return result
 def ArrayPlus(x:[float],y:[float])->[float]:
-     result=[0]*len(x)
-     for i in range(len(x)):
-         result[i]=x[i]+y[i]
+     result=[x[i]+y[i] for i in range(len(x))]
      return result
 def ArrayMultiplyConstant(x:[float],c:float)->[float]:
-     result=[0]*len(x)
-     for i in range(len(x)):
-         result[i]=x[i]*c
+     result=[x[i]*c for i in range(len(x))]
      return result
 def ArrayMultiplyArray(x:[float],y:[float])->[float]:
-     result=[0]*len(x)
-     for i in range(len(x)):
-         result[i]=x[i]*y[i]
-     return result
+    result=[x[i]*y[i] for i in range(len(x))]
+    return result
 def chaoticPSOOptimize(function: RealFunc,lowerbound:[float],upperbound:[float],
      maximumiteration:int,initialgusssize:int,numofswarms:int,
      tolerance:float
