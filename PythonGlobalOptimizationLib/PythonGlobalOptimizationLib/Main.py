@@ -13,7 +13,7 @@ import TestFunctions as TF
 #hist = msft.history(period="5d")
 #hist['Close'].plot(figsize=(16, 9))
 
-numofpara=20
+numofpara=30
 lowerbound=[0]*numofpara
 upperbound=[0]*numofpara
 for i in range(numofpara):
@@ -22,7 +22,7 @@ for i in range(numofpara):
 tolerance=0.000001
 numofswarms=100
 initialgusssize=1000
-maximumiteration=5000
+maximumiteration=500
 optimizedparameters=PSO.chaoticPSOOptimize(TF.function1,lowerbound,upperbound,maximumiteration,initialgusssize,numofswarms,tolerance)
 
 

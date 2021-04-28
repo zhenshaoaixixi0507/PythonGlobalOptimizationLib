@@ -120,7 +120,7 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:[float],upperbound:[float],
                globalbest = localbest[j]
                minerror = localerror
       
-       if math.fabs(oldglobalerror - minerror) < tolerance and i > math.floor(maximumiteration / 3 * 2):
+       if math.fabs(oldglobalerror - minerror) < tolerance and i > 50:
           break
        else:
          oldglobalerror = minerror
