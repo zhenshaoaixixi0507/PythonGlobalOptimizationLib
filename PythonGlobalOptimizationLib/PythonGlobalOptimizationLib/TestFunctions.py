@@ -1,6 +1,8 @@
 import math
-def function1(parameters):
- return sum([parameters[i]*parameters[i] for i in range(len(parameters))])
+import numpy as np
+
+def function1(parameters:np.ndarray)->float:
+ return np.sum(parameters*parameters)
     
 
 

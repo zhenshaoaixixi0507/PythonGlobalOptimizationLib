@@ -1,11 +1,12 @@
 import random
 import math
+import numpy as np
 from typing import Callable
 
-RealFunc = Callable[[float], float]  # type alias for a real -> real function
+RealFunc = Callable[[np.ndarray], float]  # type alias for a real -> real function
 
-def ConstrainX(x:[float],lowerbound:[float], upperbound:[float])-> [float]:
-    result=[0]*len(lowerbound)
+def ConstrainX(x:np.ndarray,lowerbound:np.ndarray, upperbound:np.ndarray)-> np.ndarray:
+    result=np.zeros(shape=(len(lowerbound),1))
     for i in range(len(x)):
         result[i]=x[i]
         if x[i]<lowerbound[i]:
@@ -13,8 +14,9 @@ def ConstrainX(x:[float],lowerbound:[float], upperbound:[float])-> [float]:
         if x[i]>upperbound[i]:
             result[i]=upperbound[i]
     return result
-def ConstrainV(tempV:[float],Vmax:[float])->[float]:
-    result=[0]*len(tempV)
+
+def ConstrainV(tempV:np.ndarray,Vmax:np.ndarray)->np.ndarray:
+    result=np.zeros(shape=(len(tempV),1))
     for i in range(len(tempV)):
         result[i]=tempV[i]
         if tempV[i]<-Vmax:
@@ -22,16 +24,17 @@ def ConstrainV(tempV:[float],Vmax:[float])->[float]:
         if tempV[i]>Vmax:
             result[i]=Vmax
     return result
-def GenerateR(u0:float,y0:float,length:int)->(float,float,[float]):
-    result=[0]*length
+
+def GenerateR(u0:float,y0:float,length:int)->(float,float,np.ndarray):
+    result=np.zeros(shape=(length,1))
     for i in range(length):
        y0 = math.cos(2 * math.pi * u0) + y0 * math.exp(-3)
        u0 = (u0 + 400 + 12 * y0) % 1.0
        result[i] = min(max(u0, 0), 1)
     return (u0,y0,result)
 
-def swaplocalbest(function:RealFunc,oldx:[float], newx:[float])->[float]:
-     result=[0]*len(oldx)
+def swaplocalbest(function:RealFunc,oldx:np.ndarray, newx:np.ndarray)->np.ndarray:
+     result=np.zeros(shape=(len(oldx),1))
      olderror=function(oldx)
      newerror=function(newx)
      if newerror<olderror:
@@ -39,19 +42,20 @@ def swaplocalbest(function:RealFunc,oldx:[float], newx:[float])->[float]:
      if newerror>=olderror:
          result=oldx.copy()
      return result
-def ArrayMinus(x:[float],y:[float])->[float]:
-     result=[x[i]-y[i] for i in range(len(x))]
-     return result
-def ArrayPlus(x:[float],y:[float])->[float]:
-     result=[x[i]+y[i] for i in range(len(x))]
-     return result
-def ArrayMultiplyConstant(x:[float],c:float)->[float]:
-     result=[x[i]*c for i in range(len(x))]
-     return result
-def ArrayMultiplyArray(x:[float],y:[float])->[float]:
-    result=[x[i]*y[i] for i in range(len(x))]
-    return result
-def chaoticPSOOptimize(function: RealFunc,lowerbound:[float],upperbound:[float],
+
+def ArrayMinus(x:np.ndarray,y:np.ndarray)->np.ndarray:
+     return x-y
+
+def ArrayPlus(x:np.ndarray,y:np.ndarray)->np.ndarray:
+     return x+y
+
+def ArrayMultiplyConstant(x:np.ndarray,c:float)->np.ndarray:
+     return x*c
+
+def ArrayMultiplyArray(x:np.ndarray,y:np.ndarray)->np.ndarray:
+    return x*y
+
+def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.ndarray,
      maximumiteration:int,initialgusssize:int,numofswarms:int,
      tolerance:float
 ) -> float:
@@ -67,9 +71,9 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:[float],upperbound:[float],
    localbest ={}
    Velocity = {}
    # Initialize 
-   temp=[0]*len(lowerbound)
-   tempV=[0]*len(lowerbound)
-   globalbest=[0]*len(lowerbound)
+   temp=np.zeros(shape=(len(lowerbound),1))
+   tempV=np.zeros(shape=(len(lowerbound),1))
+   globalbest=np.zeros(shape=(len(lowerbound),1))
    u0=1.0
    y0=1.0
    for i in range(initialgusssize):
@@ -96,7 +100,6 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:[float],upperbound:[float],
    for i in range(maximumiteration):
        tempweight = (inertiaweightmin + (inertiaweightmax-inertiaweightmin) / maximumiteration* i)
        for j in range(numofswarms):
-           
             tempx = localswarm[j].copy()
             tempV = Velocity[j].copy()
             templocalbest = localbest[j].copy()
@@ -120,7 +123,7 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:[float],upperbound:[float],
                globalbest = localbest[j]
                minerror = localerror
       
-       if math.fabs(oldglobalerror - minerror) < tolerance and i > 50:
+       if math.fabs(oldglobalerror - minerror) < tolerance and i >100:
           break
        else:
          oldglobalerror = minerror
