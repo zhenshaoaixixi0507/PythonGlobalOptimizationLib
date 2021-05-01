@@ -28,7 +28,7 @@
     <Compile Include="Main.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\GARCH.py">
+    <Compile Include="Models\GARCHNormal.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\StatisticCalculation.py">

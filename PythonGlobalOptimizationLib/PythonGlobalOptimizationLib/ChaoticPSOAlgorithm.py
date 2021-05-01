@@ -123,7 +123,7 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
                globalbest = localbest[j]
                minerror = localerror
       
-       if math.fabs(oldglobalerror - minerror) < tolerance and i >100:
+       if math.fabs(oldglobalerror - minerror) < tolerance and i>5:
           break
        else:
          oldglobalerror = minerror
