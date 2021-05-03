@@ -19,7 +19,7 @@ def GARCHNormalOptimize(ret:np.ndarray)->[float]:
                 sigmasquare[i+1]=newsigma
                 r=residual[i+1]
                 zt=r*r/newsigma
-                LL[i]=0.5*log(2*pi)+log(min(newsigma,999999))+log(zt+0.0000000001)
+                LL[i]=0.5*log(2*pi)+0.5*log(min(newsigma,999999))+0.5*log(zt+0.0000000001)
             return sum(LL)
 
     lowerbound=np.zeros(shape=(3,1))
