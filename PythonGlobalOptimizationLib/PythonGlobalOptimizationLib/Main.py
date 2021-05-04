@@ -13,7 +13,7 @@ import GARCHNormal as GAN
 
 # Get Yahoo Finance Data
 print("Downloading data...")
-adjclose=GD.GetYahooFinanceData('TSLA','2014-12-31','2019-12-31','weekly','adjclose')
+adjclose=GD.GetYahooFinanceData('^GSPC','2014-12-31','2019-12-31','weekly','adjclose')
 print("Data downloaded, optimize parameters...")
 logret=SC.LogReturnCalculation(adjclose)
 DF_logret = pd.DataFrame(logret)
@@ -24,8 +24,9 @@ DF_logret.to_csv("DataDownload/return.csv",index=False)
 #plt.plot(logret)
 #plt.show()
 
-#optimizedpara=GAN.GARCHNormalOptimize(logret)
-
-print("Finished.")
-
+optimizedpara=GAN.GARCHNormalOptimize(logret)
+print(optimizedpara)
+sigmainsmaple=GAN.GetInSampleSigma(optimizedpara,logret)
+plt.plot(sigmainsmaple)
+plt.show()
 
