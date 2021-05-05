@@ -25,6 +25,7 @@ DF_logret.to_csv("DataDownload/return.csv",index=False)
 #plt.show()
 
 optimizedpara=GAN.GARCHNormalOptimize(logret)
+
 print(optimizedpara)
 sigmainsmaple=GAN.GetInSampleSigma(optimizedpara,logret)
 plt.plot(sigmainsmaple)

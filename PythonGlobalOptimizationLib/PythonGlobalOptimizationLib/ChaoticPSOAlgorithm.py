@@ -56,7 +56,7 @@ def ArrayMultiplyArray(x:np.ndarray,y:np.ndarray)->np.ndarray:
     return x*y
 
 def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.ndarray,
-     maximumiteration:int,initialgusssize:int,numofswarms:int,
+     maximumiteration:int,initialgusssize:int,initialguess:np.ndarray,numofswarms:int,
      tolerance:float
 ) -> float:
    inertiaweightmax=1.2
@@ -85,7 +85,7 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
         u0 = (u0 + 400 + 12 * y0) % 1.0
         tempV[j] = 2 * Vmax * min(max(u0, 0), 1) - Vmax
      localswarm[i]=temp.copy()
-     localbest[i]=temp.copy()
+     localbest[i]=initialguess.copy()
      Velocity[i]=tempV.copy()
      if i == 1:
          minerror = function(temp)
@@ -124,7 +124,7 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
                globalbest = localbest[j]
                minerror = localerror
       
-       if fabs(oldglobalerror - minerror) < tolerance and i>20:
+       if fabs(oldglobalerror - minerror) < tolerance and i>5:
           print("Objective function value: = %f" %minerror)
           break
        else:
