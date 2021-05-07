@@ -6,7 +6,7 @@ def GARCHNormalOptimize(ret:np.ndarray)->[float]:
     residual=ret-np.mean(ret)
     LL=np.zeros(shape=(len(residual)-1,1))
     sigmasquare=np.zeros(shape=(len(residual),1))
-    sigmasquare[0]=residual[0]*residual[0]
+    sigmasquare[0]=np.var(residual[0:9])#10var seems more robust https://www.researchgate.net/publication/237530561_VARIANCE_INITIALISATION_IN_GARCH_ESTIMATION
     log=np.log
     pi=math.pi
     def loglik(parameters:[np.ndarray])->float:
@@ -22,8 +22,8 @@ def GARCHNormalOptimize(ret:np.ndarray)->[float]:
             return sum(LL)
 
     lowerbound=np.zeros(shape=(3,1))
-    lowerbound[0]=0.0000001
-    lowerbound[1]=0.0000001
+    lowerbound[0]=0.001
+    lowerbound[1]=0.001
     lowerbound[2]=0.60
     upperbound=np.zeros(shape=(3,1))
     upperbound[0]=4.9999
@@ -43,7 +43,7 @@ def GARCHNormalOptimize(ret:np.ndarray)->[float]:
 def GetInSampleSigma(optpara:np.ndarray,ret:np.ndarray)->[np.ndarray]:
     residual=ret-np.mean(ret)
     sigmasquare=np.zeros(shape=(len(residual),1))
-    sigmasquare[0]=residual[0]*residual[0]
+    sigmasquare[0]=np.var(residual[0:9])
     for i in range(len(residual)-1):
          sigmasquare[i+1]=optpara[0]+optpara[1]*residual[i]*residual[i]+optpara[2]*sigmasquare[i]
     return sigmasquare

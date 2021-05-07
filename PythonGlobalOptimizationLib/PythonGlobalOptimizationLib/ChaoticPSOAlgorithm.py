@@ -89,6 +89,7 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
      Velocity[i]=tempV.copy()
      if i == 1:
          minerror = function(temp)
+         globalbest=temp.copy()
      if i>1:
          error = function(temp)
          if error<minerror:
