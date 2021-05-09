@@ -8,8 +8,8 @@ def GARCH11NormalOptimize(ret:np.ndarray)->[float]:
     log=np.log
     pi=math.pi
     def loglik(parameters:[np.ndarray])->float:
-        sigmasquarezero=np.var(residual)
-        residualzero=np.mean(residual)
+        sigmasquarezero=np.mean(np.square(residual))
+        residualzero=np.sqrt(np.mean(np.square(residual)))
         result=0.0
         LL=0.0
         if (parameters[1]+parameters[2])>=1:
@@ -27,7 +27,7 @@ def GARCH11NormalOptimize(ret:np.ndarray)->[float]:
         return result
     lowerbound=np.zeros((3,1))
     lowerbound[0]=0.0001
-    lowerbound[1]=0.0001
+    lowerbound[1]=0.1
     lowerbound[2]=0.7
     upperbound=np.zeros((3,1))
     upperbound[0]=0.99
@@ -39,16 +39,16 @@ def GARCH11NormalOptimize(ret:np.ndarray)->[float]:
     maximumiteration=500
     initialguess=np.zeros((3,1))
     initialguess[0]=0.01
-    initialguess[1]=0.15
-    initialguess[2]=0.75
+    initialguess[1]=0.05
+    initialguess[2]=0.85
     optimizedparameters=PSO.chaoticPSOOptimize(loglik,lowerbound,upperbound,maximumiteration,initialgusssize,initialguess,numofswarms,tolerance)
     return optimizedparameters
 
 def GetInSampleSigma(optpara:np.ndarray,ret:np.ndarray)->[np.ndarray]:
     residual=ret-np.mean(ret)
     sigmasquare=np.zeros((len(residual),1))
-    sigmasquarezero=np.var(residual)
-    residualzero=np.mean(residual)
+    sigmasquarezero=np.mean(np.square(residual))
+    residualzero=np.sqrt(np.mean(np.square(residual)))
     for i in range(len(residual)):
          sigmasquare[i]=optpara[0]+optpara[1]*residualzero*residualzero+optpara[2]*sigmasquarezero
          sigmasquarezero= sigmasquare[i]

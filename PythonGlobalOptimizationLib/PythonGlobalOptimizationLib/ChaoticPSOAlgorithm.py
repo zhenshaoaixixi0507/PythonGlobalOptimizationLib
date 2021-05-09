@@ -108,7 +108,7 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
                globalbest = localbest[j].copy()
                minerror = localerror
       
-       if fabs(oldglobalerror - minerror) < tolerance and i>5:
+       if fabs(oldglobalerror - minerror) < tolerance and i>4:
           print("Objective function value: = %f" %minerror)
           break
        else:

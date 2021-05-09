@@ -12,7 +12,7 @@ import GARCH11Normal as GA11N
 import AR1GARCH11Normal as AR1GA11N
 # Get Yahoo Finance Data
 print("Downloading data...")
-adjclose=GD.GetYahooFinanceData('^DJI','2019-12-31','2020-12-31','daily','adjclose')
+adjclose=GD.GetYahooFinanceData('^DJI','2018-12-31','2020-12-31','daily','adjclose')
 print("Data downloaded, optimize parameters...")
 logret=SC.LogReturnCalculation(adjclose)
 DF_logret = pd.DataFrame(logret)
