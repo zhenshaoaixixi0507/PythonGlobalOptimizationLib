@@ -66,11 +66,9 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
         y0 = math.cos(2 * math.pi * u0) + y0 * math.exp(-3)
         u0 = (u0 + 400 + 12 * y0) % 1.0
         tempV[j] = 2 * Vmax * min(max(u0, 0), 1) - Vmax
-     temp=ConstrainX(temp,lowerbound,upperbound)
-     tempV=ConstrainV(tempV,Vmax)
-     localswarm[i]=temp.copy()
+     localswarm[i]=ConstrainX(temp,lowerbound,upperbound)
      localbest[i]=initialguess.copy()
-     Velocity[i]=tempV.copy()
+     Velocity[i]=ConstrainV(tempV,Vmax)
      if i == 1:
          minerror = function(temp)
      if i>1:
@@ -85,24 +83,16 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
    for i in range(maximumiteration):
        tempweight = (inertiaweightmin + (inertiaweightmax-inertiaweightmin) / maximumiteration* i)
        for j in range(numofswarms):
-            tempx = localswarm[j].copy()
-            tempV = Velocity[j].copy()
-            templocalbest = localbest[j].copy()
-            item1 = tempV*tempweight
             (u0,y0,R1)=GenerateR(u0,y0,len(lowerbound))
             (u0,y0,R2)=GenerateR(u0,y0,len(lowerbound))
-            item2 = np.multiply((templocalbest-tempx),R1*c1)
-            item3 = np.multiply((globalbest-tempx), R2*c2)
-            item1 = np.add(item1, item2)
+            item2 = np.multiply((localbest[j].copy()-localswarm[j].copy()),R1*c1)
+            item3 = np.multiply((globalbest-localswarm[j].copy()), R2*c2)
+            item1 = np.add( Velocity[j].copy()*tempweight, item2)
             item1 = np.add(item1, item3)
-            newV =item1*chi
-            newV = ConstrainV(newV, Vmax)
-            newX = np.add(tempx, newV)
-            newX = ConstrainX(newX,lowerbound,upperbound)
-            localswarm[j] = newX.copy()
-            Velocity[j] = newV.copy()
-            newlocalbest = swaplocalbest(function,tempx, newX)
-            localbest[j] = newlocalbest.copy()
+            localswarm[j] = ConstrainX(np.add(localswarm[j].copy(), ConstrainV(item1*chi, Vmax)),lowerbound,upperbound)
+            Velocity[j] = ConstrainV(item1*chi, Vmax)
+            newlocalbest = swaplocalbest(function,localswarm[j].copy(), localswarm[j])
+            localbest[j] = newlocalbest
             localerror = function(localbest[j])
             if localerror < minerror:
                globalbest = localbest[j].copy()
