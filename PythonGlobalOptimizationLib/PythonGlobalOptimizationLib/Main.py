@@ -10,11 +10,12 @@ import GetYahooFinanceTimeSeriesData as GD
 sys.path.append("./Models")
 import StatisticCalculation as SC
 import GARCH11Normal as GA11N
+import GJR11Normal as GJR11N
 import AR1GARCH11Normal as AR1GA11N
 
 # Get Yahoo Finance Data
 print("Downloading data...")
-adjclose=GD.GetYahooFinanceData('^DJI','2019-12-31','2020-12-31','daily','adjclose')
+adjclose=GD.GetYahooFinanceData('^GSPC','2015-12-31','2018-12-31','daily','adjclose')
 print("Data downloaded, optimize parameters...")
 logret=SC.LogReturnCalculation(adjclose)
 DF_logret = pd.DataFrame(logret)
@@ -31,4 +32,9 @@ plt.plot(sigmainsmaple1)
 plot2 = plt.figure(2)
 plt.plot(sigmainsmaple2)
 plt.show()
+#optimizedpara=GJR11N.GJR11NormalOptimize(logret)
+#sigmainsmaple=GJR11N.GetInSampleSigma(optimizedpara,logret)
+#print(optimizedpara)
+#plt.plot(sigmainsmaple)
+#plt.show()
 

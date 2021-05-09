@@ -31,7 +31,7 @@ def AR1GARCH11NormalOptimize(ret:np.ndarray)->[float]:
     lowerbound=np.zeros((3,1))
     lowerbound[0]=0.001
     lowerbound[1]=0.1
-    lowerbound[2]=0.7
+    lowerbound[2]=0.65
     upperbound=np.zeros((3,1))
     upperbound[0]=0.49
     upperbound[1]=0.99
