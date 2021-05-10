@@ -29,10 +29,10 @@ def GJR11NormalOptimize(ret:np.ndarray)->[float]:
     lowerbound[0]=0.001
     lowerbound[1]=0.1
     lowerbound[2]=0.001
-    lowerbound[3]=0.6
+    lowerbound[3]=0.49
     upperbound=np.zeros((4,1))
     upperbound[0]=0.49
-    upperbound[1]=0.99
+    upperbound[1]=0.49
     lowerbound[2]=0.99
     upperbound[3]=0.99999
     tolerance=0.000000001
