@@ -55,3 +55,16 @@ def GetInSampleSigma(optpara:np.ndarray,ret:np.ndarray)->[np.ndarray]:
          residualzero=residual[i]
     sigmasquare=np.sqrt(sigmasquare)
     return sigmasquare
+
+def Simulate(parameters:np.ndarray,lastsigma:float,lastresidual:float,numofsims:int,timesteps:int)->np.ndarray:
+    np.random.seed(1)
+    r=np.random.normal(0,1,size=(numofsims,timesteps))
+    sims=np.zeros((numofsims,timesteps))
+    sqrt=np.sqrt
+    for t in range(timesteps):
+        for i in range(numofsims):
+            newsigma=parameters[0]+parameters[1]*lastresidual*lastresidual+parameters[2]*lastsigma
+            sims[i,t]=sqrt(newsigma)
+            lastsigma=newsigma
+            lastresidual=sims[i,t]*r[i,t]
+    return sims

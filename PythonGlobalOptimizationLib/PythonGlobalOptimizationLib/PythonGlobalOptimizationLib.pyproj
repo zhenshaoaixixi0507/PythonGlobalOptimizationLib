@@ -46,6 +46,7 @@
     <Folder Include="DataDownload\" />
     <Folder Include="Models\" />
     <Folder Include="Matlab code\" />
+    <Folder Include="ModelTests\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

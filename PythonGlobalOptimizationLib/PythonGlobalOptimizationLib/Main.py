@@ -17,7 +17,6 @@ print("Downloading data...")
 adjclose=GD.GetYahooFinanceData('^HSI','2018-12-31','2020-12-31','daily','adjclose')
 print("Data downloaded, optimize parameters...")
 logret=SC.LogReturnCalculation(adjclose)
-unconditionalvol=SC.UnconditionalVolCalculation(logret)
 DF_logret = pd.DataFrame(logret)
 DF_logret.to_csv("DataDownload/return.csv",index=False)
 
@@ -29,16 +28,33 @@ print(optimizedpara1)
 print(optimizedpara2)
 
 plot1 = plt.figure(1)
-plt.plot(unconditionalvol[1:],'k--',label=r'$\sigma$')
+unconditionalvol1=np.sqrt(np.var(logret-np.mean(logret)))*np.ones((len(logret)-1,1))
+plt.plot(unconditionalvol1,'k--',label=r'$\sigma$')
 plt.plot(sigmainsmaple1,'k',label=r'$\sigma_{t}$')
 plt.legend()
 plt.title('GARCH(1,1)-Normal Volatility Estimation', fontsize=10)
 plt.ylabel('Volatility (%)')
 plot2 = plt.figure(2)
-plt.plot(unconditionalvol[1:],'k--',label=r'$\sigma$')
+unconditionalvol2=np.sqrt(np.var(logret[1:(len(logret)-1)]-(np.multiply(logret[0:(len(logret)-2)],optimizedpara2[1])+optimizedpara2[0])))*np.ones((len(logret)-2,1))
+plt.plot(unconditionalvol2,'k--',label=r'$\sigma$')
 plt.plot(sigmainsmaple2,'k',label=r'$\sigma_{t}$')
 plt.legend()
 plt.title('AR(1)-GARCH(1,1)-Normal Volatility Estimation', fontsize=10)
+plt.ylabel('Volatility (%)')
+
+
+#GARCH11Normal Simulation
+print("Simulate...")
+mu=np.mean(logret)
+residual=logret-mu
+lastsigma=sigmainsmaple1[len(sigmainsmaple1)-1]**2
+numofsims=10000
+timesteps=10
+sims=GA11N.Simulate(optimizedpara1,lastsigma,residual[len(residual)-1],numofsims,timesteps)
+column_means = sims.mean(axis=0)
+plot3=plt.figure(3)
+plt.plot(column_means)
+plt.title('10-Day GARCH(1,1)-Normal Volatility Forecasting', fontsize=10)
 plt.ylabel('Volatility (%)')
 plt.show()
 
