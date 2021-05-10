@@ -12,21 +12,24 @@ def AR1GJR11NormalOptimize(ret:np.ndarray)->[float]:
     def loglik(parameters:[np.ndarray])->float:
         residual=ret[1:(len(ret)-1)]-(np.multiply(ret[0:(len(ret)-2)],m)+c)
         sigmasquare=np.zeros(shape=(len(residual),1))
-        LL=np.zeros(shape=(len(residual),1))
+        LL=0.0
         sigmasquarezero=np.mean(np.square(residual))
         residualzero=np.sqrt(np.mean(np.square(residual)))
         if (parameters[1]+parameters[2]*0.5+parameters[3])>1 or (parameters[1]+parameters[3])>1:
             return 99999999999.99
         if (parameters[1]+parameters[2]*0.5+parameters[3])<=1 and (parameters[1]+parameters[3])<=1:
-            for i in range(len(LL)):
+            for i in range(len(residual)):
                 newsigma=parameters[0]+parameters[1]*residualzero*residualzero+parameters[2]*residualzero*residualzero*(residualzero<0)+parameters[3]*sigmasquarezero
                 sigmasquare[i]=newsigma
                 r=residual[i]
                 zt=r*r/newsigma
-                LL[i]=0.5*log(2*pi)+0.5*log(newsigma)+0.5*log(zt)
+                LL=0.5*log(2*pi)+0.5*log(newsigma)+0.5*log(zt)+LL
+                if np.isnan(LL):
+                    LL=9999999999999.999
+                    break;
                 sigmasquarezero=newsigma
                 residualzero=residual[i]
-            return sum(LL)
+            return LL
 
     lowerbound=np.zeros((4,1))
     lowerbound[0]=0.001
@@ -35,7 +38,7 @@ def AR1GJR11NormalOptimize(ret:np.ndarray)->[float]:
     lowerbound[3]=0.6
     upperbound=np.zeros((4,1))
     upperbound[0]=0.49
-    upperbound[1]=0.99
+    upperbound[1]=0.49
     lowerbound[2]=0.99
     upperbound[3]=0.99999
     tolerance=0.000000001

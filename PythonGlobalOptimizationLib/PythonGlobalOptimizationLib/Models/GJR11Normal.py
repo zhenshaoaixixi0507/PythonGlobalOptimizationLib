@@ -21,6 +21,9 @@ def GJR11NormalOptimize(ret:np.ndarray)->[float]:
                 r=residual[i]
                 zt=r*r/newsigma
                 LL=0.5*log(2*pi)+0.5*log(newsigma)+0.5*log(zt)+LL
+                if np.isnan(LL):
+                    LL=9999999999999.999
+                    break;
                 sigmasquarezero=newsigma
                 residualzero=residual[i]
             result=LL

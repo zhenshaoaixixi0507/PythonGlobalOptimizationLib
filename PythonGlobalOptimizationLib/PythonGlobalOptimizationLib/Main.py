@@ -58,15 +58,15 @@ DF_logret.to_csv("DataDownload/return.csv",index=False)
 #plt.show()
 
 #GJR model
-optimizedpara=GJR11N.GJR11NormalOptimize(logret)
-sigmainsmaple=GJR11N.GetInSampleSigma(optimizedpara,logret)
-print(optimizedpara)
-plt.plot(sigmainsmaple)
-plt.show()
-#AR1GJR11 model
-#optimizedpara=AR1GJR11N.AR1GJR11NormalOptimize(logret)
-#sigmainsmaple=AR1GJR11N.GetInSampleSigma(optimizedpara,logret)
+#optimizedpara=GJR11N.GJR11NormalOptimize(logret)
+#sigmainsmaple=GJR11N.GetInSampleSigma(optimizedpara,logret)
 #print(optimizedpara)
 #plt.plot(sigmainsmaple)
 #plt.show()
+#AR1GJR11 model
+optimizedpara=AR1GJR11N.AR1GJR11NormalOptimize(logret)
+sigmainsmaple=AR1GJR11N.GetInSampleSigma(optimizedpara,logret)
+print(optimizedpara)
+plt.plot(sigmainsmaple)
+plt.show()
 
