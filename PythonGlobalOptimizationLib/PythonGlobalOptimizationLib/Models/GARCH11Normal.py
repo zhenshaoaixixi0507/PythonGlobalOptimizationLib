@@ -28,7 +28,7 @@ def GARCH11NormalOptimize(ret:np.ndarray)->[float]:
     lowerbound=np.zeros((3,1))
     lowerbound[0]=0.001
     lowerbound[1]=0.1
-    lowerbound[2]=0.65
+    lowerbound[2]=0.60
     upperbound=np.zeros((3,1))
     upperbound[0]=0.49
     upperbound[1]=0.99
@@ -38,9 +38,9 @@ def GARCH11NormalOptimize(ret:np.ndarray)->[float]:
     initialgusssize=1000
     maximumiteration=500
     initialguess=np.zeros((3,1))
-    initialguess[0]=0.01
-    initialguess[1]=0.05
-    initialguess[2]=0.85
+    initialguess[0]=0.1*np.var(residual)
+    initialguess[1]=0.15
+    initialguess[2]=0.75
     optimizedparameters=PSO.chaoticPSOOptimize(loglik,lowerbound,upperbound,maximumiteration,initialgusssize,initialguess,numofswarms,tolerance)
     return optimizedparameters
 
@@ -53,4 +53,5 @@ def GetInSampleSigma(optpara:np.ndarray,ret:np.ndarray)->[np.ndarray]:
          sigmasquare[i]=optpara[0]+optpara[1]*residualzero*residualzero+optpara[2]*sigmasquarezero
          sigmasquarezero= sigmasquare[i]
          residualzero=residual[i]
+    sigmasquare=np.sqrt(sigmasquare)
     return sigmasquare

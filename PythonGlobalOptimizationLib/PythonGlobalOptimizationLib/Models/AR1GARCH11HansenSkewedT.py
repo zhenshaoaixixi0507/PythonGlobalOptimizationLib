@@ -2,7 +2,7 @@ import numpy as np
 import math
 import ChaoticPSOAlgorithm as PSO
 
-def AR1GARCH11NormalOptimize(ret:np.ndarray)->[float]:
+def AR1GARCH11HansenSkewedTOptimize(ret:np.ndarray)->[float]:
     log=np.log
     pi=math.pi
     x=ret[0:(len(ret)-2)]
@@ -63,5 +63,4 @@ def GetInSampleSigma(optpara:np.ndarray,ret:np.ndarray)->[np.ndarray]:
          sigmasquare[i]=optpara[2]+optpara[3]*residualzero*residualzero+optpara[4]*sigmasquarezero
          sigmasquarezero=sigmasquare[i]
          residualzero=residual[i]
-    sigmasquare=np.sqrt(sigmasquare)
     return sigmasquare

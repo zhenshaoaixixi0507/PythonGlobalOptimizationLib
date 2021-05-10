@@ -56,6 +56,7 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
    temp=np.zeros((len(lowerbound),1))
    tempV=np.zeros((len(lowerbound),1))
    globalbest=initialguess.copy()
+   minerror = function(globalbest)
    u0=1.0
    y0=1.0
    for i in range(initialgusssize):
@@ -69,19 +70,16 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
      localswarm[i]=ConstrainX(temp,lowerbound,upperbound)
      localbest[i]=initialguess.copy()
      Velocity[i]=ConstrainV(tempV,Vmax)
-     if i == 1:
-         minerror = function(temp)
-     if i>1:
-         error = function(temp)
-         if error<minerror:
-             minerror=error
-             globalbest=temp.copy()
+     error = function(temp)
+     if error<minerror:
+        minerror=error
+        globalbest=temp.copy()
    oldglobalerror=minerror
    u0 = 1.00
    y0 = 1.00
    fabs=math.fabs
    for i in range(maximumiteration):
-       tempweight = (inertiaweightmin + (inertiaweightmax-inertiaweightmin) / maximumiteration* i)
+       tempweight = (inertiaweightmax-(inertiaweightmax-inertiaweightmin) / maximumiteration* i)
        for j in range(numofswarms):
             (u0,y0,R1)=GenerateR(u0,y0,len(lowerbound))
             (u0,y0,R2)=GenerateR(u0,y0,len(lowerbound))

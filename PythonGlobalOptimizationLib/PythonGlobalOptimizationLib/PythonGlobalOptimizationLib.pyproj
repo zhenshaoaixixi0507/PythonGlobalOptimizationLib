@@ -28,6 +28,8 @@
     <Compile Include="Main.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\AR1GARCH11HansenSkewedT.py" />
+    <Compile Include="Models\AR1GJR11Normal.py" />
     <Compile Include="Models\AR1GARCH11Normal.py" />
     <Compile Include="Models\GJR11Normal.py" />
     <Compile Include="Models\GARCH11Normal.py">
