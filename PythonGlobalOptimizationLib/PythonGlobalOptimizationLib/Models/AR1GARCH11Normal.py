@@ -7,51 +7,52 @@ def AR1GARCH11NormalOptimize(ret:np.ndarray)->[float]:
     pi=math.pi
     x=ret[0:(len(ret)-2)]
     y=ret[1:(len(ret)-1)]
-    A=np.vstack([x, np.ones(len(x))]).T
-    m, c = np.linalg.lstsq(A, y, rcond=None)[0]
+    #A=np.vstack([x, np.ones(len(x))]).T
+    #m, c = np.linalg.lstsq(A, y, rcond=None)[0]
     def loglik(parameters:[np.ndarray])->float:
-        residual=ret[1:(len(ret)-1)]-(np.multiply(ret[0:(len(ret)-2)],m)+c)
+        residual=ret[1:(len(ret)-1)]-(np.multiply(ret[0:(len(ret)-2)],parameters[1])+parameters[0])
         sigmasquare=np.zeros(shape=(len(residual),1))
         LL=np.zeros(shape=(len(residual),1))
         sigmasquarezero=np.mean(np.square(residual))
         residualzero=np.sqrt(np.mean(np.square(residual)))
-        if (parameters[1]+parameters[2])>=1:
+        if (parameters[3]+parameters[4])>=1:
             return 99999999999.99
-        if parameters[1]+parameters[2]<1:
+        if parameters[3]+parameters[4]<1:
             for i in range(len(LL)):
-                newsigma=parameters[0]+parameters[1]*residualzero*residualzero+parameters[2]*sigmasquarezero
+                newsigma=parameters[2]+parameters[3]*residualzero*residualzero+parameters[4]*sigmasquarezero
                 sigmasquare[i]=newsigma
                 r=residual[i]
                 zt=r*r/newsigma
-                LL[i]=0.5*log(2*pi)+0.5*log(newsigma)+0.5*log(zt)
+                LL[i]=log(newsigma)+zt
                 sigmasquarezero=newsigma
                 residualzero=residual[i]
             return sum(LL)
 
-    lowerbound=np.zeros((3,1))
-    lowerbound[0]=0.001
-    lowerbound[1]=0.1
-    lowerbound[2]=0.49
-    upperbound=np.zeros((3,1))
-    upperbound[0]=0.49
-    upperbound[1]=0.49
-    upperbound[2]=0.99999
+    lowerbound=np.zeros((5,1))
+    lowerbound[0]=-4.99
+    lowerbound[1]=-0.99
+    lowerbound[2]=0.000001
+    lowerbound[3]=0.00001
+    lowerbound[4]=0.6
+    upperbound=np.zeros((5,1))
+    upperbound[0]=4.99
+    upperbound[1]=0.99
+    upperbound[2]=4.99
+    upperbound[3]=0.99
+    upperbound[4]=0.99999
     tolerance=0.000000001
     numofswarms=100
     initialgusssize=1000
     maximumiteration=500
-    initialguess=np.zeros((3,1))
-    residual=ret[1:(len(ret)-1)]-(np.multiply(ret[0:(len(ret)-2)],m)+c)
-    initialguess[0]=0.1*np.var(residual)
-    initialguess[1]=0.15
-    initialguess[2]=0.75
-    optimizedparameters=np.zeros((5,1))
-    optimizedparameters[0]=c
-    optimizedparameters[1]=m
-    optimizedpara=PSO.chaoticPSOOptimize(loglik,lowerbound,upperbound,maximumiteration,initialgusssize,initialguess,numofswarms,tolerance)
-    optimizedparameters[2]=optimizedpara[0]
-    optimizedparameters[3]=optimizedpara[1]
-    optimizedparameters[4]=optimizedpara[2]
+    initialguess=np.zeros((5,1))
+    initialguess[0]=0.2
+    initialguess[1]=0.5
+    residual=ret[1:(len(ret)-1)]-(np.multiply(ret[0:(len(ret)-2)],initialguess[1])+initialguess[0])
+    initialguess[2]=0.1*np.var(residual)
+    initialguess[3]=0.15
+    initialguess[4]=0.75
+
+    optimizedparameters=PSO.chaoticPSOOptimize(loglik,lowerbound,upperbound,maximumiteration,initialgusssize,initialguess,numofswarms,tolerance)
     return optimizedparameters
 
 def GetInSampleSigma(optpara:np.ndarray,ret:np.ndarray)->[np.ndarray]:

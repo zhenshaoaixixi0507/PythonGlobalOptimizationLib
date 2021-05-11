@@ -20,22 +20,19 @@ def GJR11NormalOptimize(ret:np.ndarray)->[float]:
                 sigmasquare[i]=newsigma
                 r=residual[i]
                 zt=r*r/newsigma
-                LL=0.5*log(2*pi)+0.5*log(newsigma)+0.5*log(zt)+LL
-                if np.isnan(LL):
-                    LL=9999999999999.999
-                    break;
+                LL=log(newsigma)+zt+LL
                 sigmasquarezero=newsigma
                 residualzero=residual[i]
             result=LL
         return result
     lowerbound=np.zeros((4,1))
-    lowerbound[0]=0.001
-    lowerbound[1]=0.1
-    lowerbound[2]=0.001
-    lowerbound[3]=0.49
+    lowerbound[0]=0.00001
+    lowerbound[1]=0.0001
+    lowerbound[2]=0.00001
+    lowerbound[3]=0.6
     upperbound=np.zeros((4,1))
-    upperbound[0]=0.49
-    upperbound[1]=0.49
+    upperbound[0]=0.99
+    upperbound[1]=0.99
     lowerbound[2]=0.99
     upperbound[3]=0.99999
     tolerance=0.000000001
@@ -45,7 +42,7 @@ def GJR11NormalOptimize(ret:np.ndarray)->[float]:
     initialguess=np.zeros((4,1))
     initialguess[0]=0.1*np.var(residual)
     initialguess[1]=0.15
-    initialguess[2]=-0.5
+    initialguess[2]=0.5
     initialguess[3]=0.75
     optimizedparameters=PSO.chaoticPSOOptimize(loglik,lowerbound,upperbound,maximumiteration,initialgusssize,initialguess,numofswarms,tolerance)
     return optimizedparameters

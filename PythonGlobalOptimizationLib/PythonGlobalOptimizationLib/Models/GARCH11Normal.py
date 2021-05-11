@@ -20,18 +20,19 @@ def GARCH11NormalOptimize(ret:np.ndarray)->[float]:
                 sigmasquare[i]=newsigma
                 r=residual[i]
                 zt=r*r/newsigma
-                LL=0.5*log(2*pi)+0.5*log(newsigma)+0.5*log(zt)+LL
+                #LL=0.5*log(2*pi)+0.5*log(newsigma)+0.5*log(zt)+LL
+                LL=zt+log(newsigma)+LL
                 sigmasquarezero=newsigma
                 residualzero=residual[i]
             result=LL
         return result
     lowerbound=np.zeros((3,1))
-    lowerbound[0]=0.001
-    lowerbound[1]=0.1
-    lowerbound[2]=0.49
+    lowerbound[0]=0.000001
+    lowerbound[1]=0.00001
+    lowerbound[2]=0.6
     upperbound=np.zeros((3,1))
-    upperbound[0]=0.49
-    upperbound[1]=0.49
+    upperbound[0]=4.99
+    upperbound[1]=0.99
     upperbound[2]=0.99999
     tolerance=0.000000001
     numofswarms=100
