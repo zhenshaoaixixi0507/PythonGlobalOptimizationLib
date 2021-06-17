@@ -69,3 +69,65 @@ def Simulate(parameters:np.ndarray,lastsigma:float,lastresidual:float,numofsims:
             lastsigma=newsigma
             lastresidual=sims[i,t]*r[i,t]
     return sims
+
+def TestOptimizationAlgorithm():
+    n=500
+    alpha0=0.1
+    alpha1=0.05
+    beta=0.8
+    sims=np.zeros((n,1))
+    np.random.seed(1)
+    r=np.random.normal(0,1,size=(n,1))
+    sigmasquarezero=alpha0/(1-alpha1-beta)
+    residualzero=np.sqrt(sigmasquarezero)
+    for i in range(len(sims)):
+        sigmasquarezero=alpha0+alpha1*residualzero*residualzero+beta*sigmasquarezero
+        sims[i]=r[i]*np.sqrt(sigmasquarezero)
+        residualzero=r[i]
+    sigmasquare=np.zeros(shape=(len(sims),1))
+    def logliktest(parameters:[np.ndarray])->float:
+        sigmasquarezero=np.mean(np.square(sims))
+        residualzero=np.sqrt(np.mean(np.square(sims)))
+        result=0.0
+        LL=0.0
+        if (parameters[1]+parameters[2])>=1:
+            result= 9999999999999.999
+        if (parameters[1]+parameters[2])<1:
+            for i in range(len(sigmasquare)):
+                newsigma=parameters[0]+parameters[1]*residualzero*residualzero+parameters[2]*sigmasquarezero
+                sigmasquare[i]=newsigma
+                r=sims[i]
+                zt=r*r/newsigma
+                LL=zt+np.log(newsigma)+LL
+                sigmasquarezero=newsigma
+                residualzero=sims[i]
+            result=LL
+        return result
+    lowerbound=np.zeros((3,1))
+    lowerbound[0]=0.000001
+    lowerbound[1]=0.00001
+    lowerbound[2]=0.6
+    upperbound=np.zeros((3,1))
+    upperbound[0]=4.99
+    upperbound[1]=0.99
+    upperbound[2]=0.99999
+    tolerance=0.000000001
+    numofswarms=100
+    initialgusssize=1000
+    maximumiteration=100
+    initialguess=np.zeros((3,1))
+    initialguess[0]=0.1*np.var(sims)
+    initialguess[1]=0.15
+    initialguess[2]=0.75
+    opt1=PSO.chaoticPSOOptimize(logliktest,lowerbound,upperbound,maximumiteration,initialgusssize,initialguess,numofswarms,tolerance)
+    from scipy.optimize import BFGS,Bounds,LinearConstraint,minimize
+    bounds = Bounds([0.000001, 0.00001,0.6], [4.99, 0.99,0.99999])
+    linear_constraint = LinearConstraint([0, 1,1], 0.0, 1.0)
+    opt2 = minimize(logliktest, [0.1*np.var(sims),0.15,0.75], method='trust-constr', jac='2-point', hess=BFGS(),
+               constraints=linear_constraint,
+               options={'verbose': 1}, bounds=bounds)
+    print(opt1)
+    print(opt2.x)
+    import matplotlib.pyplot as plt
+    plt.plot(sims)
+    plt.show()

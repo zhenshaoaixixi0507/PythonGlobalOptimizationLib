@@ -79,7 +79,7 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
    y0 = 1.00
    fabs=math.fabs
    for i in range(maximumiteration):
-       tempweight = (inertiaweightmax-(inertiaweightmax-inertiaweightmin) / maximumiteration* i)
+       tempweight = (inertiaweightmin+(inertiaweightmax-inertiaweightmin) / maximumiteration* i)
        for j in range(numofswarms):
             (u0,y0,R1)=GenerateR(u0,y0,len(lowerbound))
             (u0,y0,R2)=GenerateR(u0,y0,len(lowerbound))
@@ -96,7 +96,7 @@ def chaoticPSOOptimize(function: RealFunc,lowerbound:np.ndarray,upperbound:np.nd
                globalbest = localbest[j].copy()
                minerror = localerror
       
-       if fabs(oldglobalerror - minerror) < tolerance and i>4:
+       if fabs(oldglobalerror - minerror) < tolerance and i>5:
           print("Objective function value: = %f" %minerror)
           break
        else:

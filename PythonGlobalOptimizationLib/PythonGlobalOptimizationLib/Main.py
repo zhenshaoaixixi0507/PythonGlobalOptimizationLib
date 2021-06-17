@@ -13,13 +13,14 @@ import GJR11Normal as GJR11N
 import AR1GARCH11Normal as AR1GA11N
 import AR1GJR11Normal as AR1GJR11N
 # Get Yahoo Finance Data
-print("Downloading data...")
-adjclose=GD.GetYahooFinanceData('^GSPC','2019-12-31','2021-05-10','daily','adjclose')
-print("Data downloaded, optimize parameters...")
-logret=SC.LogReturnCalculation(adjclose)
-DF_logret = pd.DataFrame(logret)
-DF_logret.to_csv("DataDownload/return.csv",index=False)
-
+#print("Downloading data...")
+#adjclose=GD.GetYahooFinanceData('^GSPC','2019-12-31','2021-05-10','daily','adjclose')
+#print("Data downloaded, optimize parameters...")
+#logret=SC.LogReturnCalculation(adjclose)
+#DF_logret = pd.DataFrame(logret)
+#DF_logret.to_csv("DataDownload/return.csv",index=False)
+#Test optimization algorithm
+GA11N.TestOptimizationAlgorithm()
 #optimizedpara1=GA11N.GARCH11NormalOptimize(logret)
 #sigmainsmaple1=GA11N.GetInSampleSigma(optimizedpara1,logret)
 #optimizedpara2=AR1GA11N.AR1GARCH11NormalOptimize(logret)
@@ -65,9 +66,9 @@ DF_logret.to_csv("DataDownload/return.csv",index=False)
 #plt.plot(sigmainsmaple)
 #plt.show()
 #AR1GJR11 model
-optimizedpara=AR1GJR11N.AR1GJR11NormalOptimize(logret)
-sigmainsmaple=AR1GJR11N.GetInSampleSigma(optimizedpara,logret)
-print(optimizedpara)
-plt.plot(sigmainsmaple)
-plt.show()
+#optimizedpara=AR1GJR11N.AR1GJR11NormalOptimize(logret)
+#sigmainsmaple=AR1GJR11N.GetInSampleSigma(optimizedpara,logret)
+#print(optimizedpara)
+#plt.plot(sigmainsmaple)
+#plt.show()
 
