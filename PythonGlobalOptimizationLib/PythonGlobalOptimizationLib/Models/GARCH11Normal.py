@@ -74,16 +74,18 @@ def TestOptimizationAlgorithm():
     n=500
     alpha0=0.1
     alpha1=0.05
-    beta=0.8
+    beta=0.85
     sims=np.zeros((n,1))
     np.random.seed(1)
     r=np.random.normal(0,1,size=(n,1))
     sigmasquarezero=alpha0/(1-alpha1-beta)
     residualzero=np.sqrt(sigmasquarezero)
     for i in range(len(sims)):
+        if i>0:
+            residualzero=sims[i-1]
         sigmasquarezero=alpha0+alpha1*residualzero*residualzero+beta*sigmasquarezero
         sims[i]=r[i]*np.sqrt(sigmasquarezero)
-        residualzero=r[i]
+        
     sigmasquare=np.zeros(shape=(len(sims),1))
     def logliktest(parameters:[np.ndarray])->float:
         sigmasquarezero=np.mean(np.square(sims))
