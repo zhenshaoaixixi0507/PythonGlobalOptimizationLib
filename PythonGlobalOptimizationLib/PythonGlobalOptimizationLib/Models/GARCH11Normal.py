@@ -100,7 +100,7 @@ def TestOptimizationAlgorithm():
                 sigmasquare[i]=newsigma
                 r=sims[i]
                 zt=r*r/newsigma
-                LL=zt+np.log(newsigma)+LL
+                LL=zt+np.log(newsigma)+LL               
                 sigmasquarezero=newsigma
                 residualzero=sims[i]
             result=LL
@@ -113,15 +113,19 @@ def TestOptimizationAlgorithm():
     upperbound[0]=4.99
     upperbound[1]=0.99
     upperbound[2]=0.99999
-    tolerance=0.000000001
-    numofswarms=100
-    initialgusssize=1000
+    tolerance=0.00000001
+    numofswarms=50
+    initialgusssize=50
     maximumiteration=100
     initialguess=np.zeros((3,1))
     initialguess[0]=0.1*np.var(sims)
     initialguess[1]=0.15
     initialguess[2]=0.75
+    import time
+    start_time = time.time()
     opt1=PSO.chaoticPSOOptimize(logliktest,lowerbound,upperbound,maximumiteration,initialgusssize,initialguess,numofswarms,tolerance)
+    end_time = time.time()
+    print(f"The execution time is: {end_time-start_time}")
     from scipy.optimize import BFGS,Bounds,LinearConstraint,minimize
     bounds = Bounds([0.000001, 0.00001,0.6], [4.99, 0.99,0.99999])
     linear_constraint = LinearConstraint([0, 1,1], 0.0, 1.0)
